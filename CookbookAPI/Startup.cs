@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace CookbookAPI
 {
@@ -26,6 +28,21 @@ namespace CookbookAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSwaggerDocument(document =>
+            {
+                document.Title = "Cookbook API Documentation";
+                document.DocumentName = "swagger";
+                document.OperationProcessors.Add(new OperationSecurityScopeProcessor("jwt"));
+                document.DocumentProcessors.Add(new SecurityDefinitionAppender("jwt", new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "JWT Token - remember to add 'Bearer ' before the token",
+                }));
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +62,21 @@ namespace CookbookAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseOpenApi(options =>
+            {
+                options.DocumentName = "swagger";
+                options.Path = "/swagger/v1/swagger.json";
+                options.PostProcess = (document, _) =>
+                {
+                    document.Schemes.Add(OpenApiSchema.Https);
+                };
+            });
+
+            app.UseSwaggerUi3(options =>
+            {
+                options.DocumentPath = "/swagger/v1/swagger.json";
             });
         }
     }
