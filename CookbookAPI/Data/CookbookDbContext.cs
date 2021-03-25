@@ -21,6 +21,7 @@ namespace CookbookAPI.Data
 
         public DbSet<User> Users { get; set; }
 
+        public CookbookDbContext(DbContextOptions<CookbookDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,7 +34,7 @@ namespace CookbookAPI.Data
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(ri => ri.Ingredient)
                 .WithMany(i => i.RecipeIngredient)
-                .HasForeignKey(ri => ri.Ingredient);
+                .HasForeignKey(ri => ri.IngredientId);
         }
     }
 }

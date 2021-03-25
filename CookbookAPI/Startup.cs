@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CookbookAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 
@@ -42,6 +44,9 @@ namespace CookbookAPI
                     Description = "JWT Token - remember to add 'Bearer ' before the token",
                 }));
             });
+
+            var connectionString = Configuration.GetConnectionString("LocalDb");
+            services.AddDbContext<CookbookDbContext>(x => x.UseSqlServer(connectionString));
 
         }
 
