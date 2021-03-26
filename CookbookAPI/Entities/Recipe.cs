@@ -19,7 +19,7 @@ namespace CookbookAPI.Entities
 
         public int? UserId { get; set; }
 
-        public List<RecipeIngredient> RecipeIngredient { get; set; } = new List<RecipeIngredient>();
+        public List<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
 
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
