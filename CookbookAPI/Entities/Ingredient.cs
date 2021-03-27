@@ -13,6 +13,8 @@ namespace CookbookAPI.Entities
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public List<RecipeIngredient> RecipeIngredient { get; set; } = new List<RecipeIngredient>();
     }
 }
