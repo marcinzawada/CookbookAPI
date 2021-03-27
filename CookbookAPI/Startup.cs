@@ -10,10 +10,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CookbookAPI.ApiClients;
+using CookbookAPI.ApiClients.Interfaces;
 using CookbookAPI.Data;
+using CookbookAPI.DTOs.MealDB;
+using CookbookAPI.Entities;
+using CookbookAPI.Mappers;
+using CookbookAPI.Mappers.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using RestSharp;
 
 namespace CookbookAPI
 {
@@ -47,6 +54,12 @@ namespace CookbookAPI
 
             var connectionString = Configuration.GetConnectionString("LocalDb");
             services.AddDbContext<CookbookDbContext>(x => x.UseSqlServer(connectionString));
+
+            services.AddAutoMapper(this.GetType().Assembly);
+            services.AddScoped<IMealApiClient, MealApiClient>();
+            services.AddScoped<IApiClient,ApiClient>();
+            services.AddTransient<IRestClient, RestClient>();
+            services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
 
         }
 
