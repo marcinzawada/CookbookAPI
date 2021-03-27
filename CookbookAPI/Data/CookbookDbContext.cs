@@ -29,7 +29,7 @@ namespace CookbookAPI.Data
                 .HasKey(ri => new {ri.RecipeId, ri.IngredientId});
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(ri => ri.Recipe)
-                .WithMany(r => r.RecipeIngredient)
+                .WithMany(r => r.RecipeIngredients)
                 .HasForeignKey(ri => ri.RecipeId);
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(ri => ri.Ingredient)
