@@ -43,16 +43,16 @@ namespace CookbookAPI.Mappers
 
             if (category is null)
             {
-                _logger.LogError($"Category {dto.Category} not found in database");
-                throw new Exception($"Category {dto.Category} not found in database");
+                _logger.LogError($"Category: {dto.Category} not found in database");
+                throw new Exception($"Category: {dto.Category} not found in database");
             }
 
-            var area = _context.Areas.FirstOrDefault(x => x.Name.ToLower() == dto.Category.ToLower());
+            var area = _context.Areas.FirstOrDefault(x => x.Name.ToLower() == dto.Area.ToLower());
 
             if (area is null)
             {
-                _logger.LogError($"Area {dto.Area} not found in database");
-                throw new Exception($"Area {dto.Area} not found in database");
+                _logger.LogError($"Area: {dto.Area} not found in database");
+                throw new Exception($"Area: {dto.Area} not found in database");
             }
 
             var recipe = new Recipe
