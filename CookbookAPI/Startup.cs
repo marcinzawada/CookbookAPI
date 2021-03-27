@@ -17,6 +17,8 @@ using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
 using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
+using CookbookAPI.Seeders;
+using CookbookAPI.Seeders.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -60,11 +62,11 @@ namespace CookbookAPI
             services.AddScoped<IApiClient,ApiClient>();
             services.AddTransient<IRestClient, RestClient>();
             services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
-
+            services.AddScoped<ISeeder, MealDbSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISeeder seeder)
         {
             if (env.IsDevelopment())
             {
@@ -96,6 +98,13 @@ namespace CookbookAPI
             {
                 options.DocumentPath = "/swagger/v1/swagger.json";
             });
+
+            ConfigureAsync(seeder).Wait();
+        }
+
+        public async Task ConfigureAsync(ISeeder seeder)
+        {
+            await seeder.Seed().ConfigureAwait(false);
         }
     }
 }
