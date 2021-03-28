@@ -14,16 +14,19 @@ using System.Threading.Tasks;
 using CookbookAPI.ApiClients;
 using CookbookAPI.ApiClients.Interfaces;
 using CookbookAPI.Common;
+using CookbookAPI.Common.Interfaces;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
 using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
+using CookbookAPI.Repositories;
 using CookbookAPI.Seeders;
 using CookbookAPI.Seeders.Interfaces;
 using CookbookAPI.Services;
 using CookbookAPI.Services.Interfaces;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
@@ -95,6 +98,14 @@ namespace CookbookAPI
             services.AddScoped<ISeeder, MealDbSeeder>();
             services.AddHttpContextAccessor();
             services.AddScoped<IUserContextService, UserContextService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<UserRepository>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
