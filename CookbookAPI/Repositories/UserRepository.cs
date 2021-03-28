@@ -10,11 +10,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CookbookAPI.Repositories
 {
-    public class UserRepository : BaseRepository<User, CookbookDbContext>
+    public class UserRepository : BaseRepository<User, CookbookDbContext>, IUserRepository
     {
         public UserRepository(CookbookDbContext context) : base(context)
         {
 
+        }
+
+        public Task<User> GetByEmail(string email)
+        {
+            return _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
         }
     }
 }
