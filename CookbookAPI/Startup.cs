@@ -19,6 +19,8 @@ using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
 using CookbookAPI.Seeders;
 using CookbookAPI.Seeders.Interfaces;
+using CookbookAPI.Services;
+using CookbookAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -63,6 +65,8 @@ namespace CookbookAPI
             services.AddTransient<IRestClient, RestClient>();
             services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
             services.AddScoped<ISeeder, MealDbSeeder>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUserContextService, UserContextService>()
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
