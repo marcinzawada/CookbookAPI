@@ -33,6 +33,7 @@ namespace CookbookAPI.Services
             var newUser = new User()
             {
                 Email = request.Email,
+                Name = request.Name
             };
 
             var hashedPassword = _passwordHasher.HashPassword(newUser, request.Password);
