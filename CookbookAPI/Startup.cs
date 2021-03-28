@@ -21,10 +21,13 @@ using CookbookAPI.Entities;
 using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
 using CookbookAPI.Repositories;
+using CookbookAPI.Requests.Account;
+using CookbookAPI.Requests.Validators;
 using CookbookAPI.Seeders;
 using CookbookAPI.Seeders.Interfaces;
 using CookbookAPI.Services;
 using CookbookAPI.Services.Interfaces;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -102,9 +105,7 @@ namespace CookbookAPI
             services.AddScoped<UserRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
-
-
+            services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
         }
 
