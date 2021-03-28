@@ -65,8 +65,8 @@ namespace CookbookAPI
                 cfg.SaveToken = true;
                 cfg.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = authenticationSettings.JwtIssuer,
-                    ValidAudience = authenticationSettings.JwtIssuer,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
                 };
             });
