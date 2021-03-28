@@ -9,9 +9,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using CookbookAPI.ApiClients;
 using CookbookAPI.ApiClients.Interfaces;
+using CookbookAPI.Common;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
@@ -23,6 +25,7 @@ using CookbookAPI.Services;
 using CookbookAPI.Services.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using RestSharp;
@@ -42,6 +45,30 @@ namespace CookbookAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddFluentValidation();
+
+            var authenticationSettings = new AuthenticationSettings();
+
+            Configuration.GetSection("Authentication").Bind(authenticationSettings);
+            services.AddSingleton(authenticationSettings);
+
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = "Bearer";
+                option.DefaultScheme = "Bearer";
+                option.DefaultChallengeScheme = "Bearer";
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = authenticationSettings.JwtIssuer,
+                    ValidAudience = authenticationSettings.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+                };
+            });
+
+            services.AddAuthorization();
 
             services.AddSwaggerDocument(document =>
             {
