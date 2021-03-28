@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using CookbookAPI.Data;
@@ -37,6 +38,10 @@ namespace CookbookAPI.Requests.Validators
 
             RuleFor(x => x.ConfirmPassword)
                 .Equal(e => e.Password);
+
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty();
         }
     }
 }
