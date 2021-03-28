@@ -18,14 +18,14 @@ namespace CookbookAPI.Services
     public class AccountService : IAccountService
     {
         private readonly UserRepository _userRepository;
-        private readonly UserManager<User> _userManager;
         private readonly IJwtGenerator _jwtGenerator;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AccountService(UserRepository userRepository, UserManager<User> userManager, IJwtGenerator jwtGenerator)
+        public AccountService(UserRepository userRepository, IJwtGenerator jwtGenerator, IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
-            _userManager = userManager;
             _jwtGenerator = jwtGenerator;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task RegisterUser(RegisterRequest request)
@@ -35,7 +35,7 @@ namespace CookbookAPI.Services
                 Email = request.Email,
             };
 
-            var hashedPassword = _userManager.PasswordHasher.HashPassword(newUser, request.Password);
+            var hashedPassword = _passwordHasher.HashPassword(newUser, request.Password);
             newUser.PasswordHash = hashedPassword;
 
             await _userRepository.Add(newUser);
@@ -43,12 +43,12 @@ namespace CookbookAPI.Services
 
         public async Task<LoginVm> Login(LoginRequest request)
         {
-            var user = await _userManager.FindByNameAsync(request.Email);
+            var user = await _userRepository.GetByEmail(request.Email);
 
             if (user is null)
                 throw new BadRequestException("Invalid email or password");
 
-            var passwordIsCorrect = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash ,request.Password);
+            var passwordIsCorrect = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash ,request.Password);
 
             if (passwordIsCorrect == PasswordVerificationResult.Failed)
                 throw new BadRequestException("Invalid email or password");
