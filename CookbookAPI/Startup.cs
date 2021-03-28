@@ -21,6 +21,7 @@ using CookbookAPI.Seeders;
 using CookbookAPI.Seeders.Interfaces;
 using CookbookAPI.Services;
 using CookbookAPI.Services.Interfaces;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -40,7 +41,7 @@ namespace CookbookAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
 
             services.AddSwaggerDocument(document =>
             {
@@ -66,7 +67,7 @@ namespace CookbookAPI
             services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
             services.AddScoped<ISeeder, MealDbSeeder>();
             services.AddHttpContextAccessor();
-            services.AddScoped<IUserContextService, UserContextService>()
+            services.AddScoped<IUserContextService, UserContextService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
