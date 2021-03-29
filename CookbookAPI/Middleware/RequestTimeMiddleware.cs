@@ -34,4 +34,5 @@ namespace CookbookAPI.Middleware
                 _logger.LogInformation(message);
             }
         }
+    }
 }
