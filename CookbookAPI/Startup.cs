@@ -106,7 +106,9 @@ namespace CookbookAPI
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<RecipesService>();
             services.AddScoped<UserRepository>();
+            services.AddScoped<RecipesRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
