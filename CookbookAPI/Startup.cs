@@ -20,6 +20,7 @@ using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
 using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
+using CookbookAPI.Middleware;
 using CookbookAPI.Repositories;
 using CookbookAPI.Requests.Account;
 using CookbookAPI.Requests.Validators;
@@ -100,6 +101,8 @@ namespace CookbookAPI
             services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
             services.AddScoped<ISeeder, MealDbSeeder>();
             services.AddHttpContextAccessor();
+            services.AddScoped<RequestTimeMiddleware>();
+            services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<UserRepository>();
@@ -116,6 +119,10 @@ namespace CookbookAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            app.UseMiddleware<RequestTimeMiddleware>();
 
             app.UseHttpsRedirection();
 
