@@ -124,6 +124,8 @@ namespace CookbookAPI
 
             app.UseMiddleware<RequestTimeMiddleware>();
 
+            app.UseAuthentication();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
