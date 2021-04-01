@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CookbookAPI.Requests.Account;
 using CookbookAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace CookbookAPI.Controllers
 {
@@ -20,6 +22,9 @@ namespace CookbookAPI.Controllers
         }
 
         [HttpPost("register")]
+        [Description("Register new user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             await _accountService.RegisterUser(request);
@@ -28,6 +33,9 @@ namespace CookbookAPI.Controllers
         }
 
         [HttpPost("login")]
+        [Description("Login user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var vm = await _accountService.Login(request);
