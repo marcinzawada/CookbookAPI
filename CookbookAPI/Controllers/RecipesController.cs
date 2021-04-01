@@ -20,7 +20,7 @@ namespace CookbookAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] RecipesRequest request)
+        public async Task<IActionResult> GetAll([FromQuery] GetRecipesRequest request)
         {
             var vm = await _recipesService.GetAll(request);
             ;
