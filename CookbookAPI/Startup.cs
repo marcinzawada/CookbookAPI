@@ -113,7 +113,7 @@ namespace CookbookAPI
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
-            services.AddScoped<IValidator<RecipesRequest>, RecipesRequestValidator>();
+            services.AddScoped<IValidator<GetRecipesRequest>, GetRecipesRequestValidator>();
 
         }
 
