@@ -37,7 +37,7 @@ namespace CookbookAPI.Requests.Validators
                 .WithMessage("'{PropertyName}' must not contain the following characters £ # “” or spaces.");
 
             RuleFor(x => x.ConfirmPassword)
-                .Equal(e => e.Password);
+                .Equal(e => e.Password).WithMessage("'{PropertyName}' must match 'Password'");
 
             RuleFor(x => x.Name)
                 .NotNull()
