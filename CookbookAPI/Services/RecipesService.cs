@@ -6,10 +6,13 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
+using CookbookAPI.Exceptions;
 using CookbookAPI.Extensions;
 using CookbookAPI.Repositories;
 using CookbookAPI.Requests.Recipes;
 using CookbookAPI.ViewModels;
+using CookbookAPI.ViewModels.Recipes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookbookAPI.Services
@@ -43,6 +46,18 @@ namespace CookbookAPI.Services
                 .PaginatedListAsync(request.PageNumber, request.PageSize, request.SortBy, request.SortDirection);
 
             return paginatedRecipes;
+        }
+
+        public async Task<GetRecipeVm> GetById(int id)
+        {
+            var recipe = await _recipesRepository.GetRecipeWithDetails(id);
+
+            if (recipe == null)
+                throw new NotFoundException($"Recipe with id: {id} not found");
+
+            var recipeDto = _mapper.Map<RecipeDto>(recipe);
+
+            return new GetRecipeVm{Recipe = recipeDto};
         }
     }
 }
