@@ -37,13 +37,13 @@ namespace CookbookAPI.Middleware
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFoundException.Message);
             }
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, e.Message);
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
 
-            //    context.Response.StatusCode = 500;
-            //    await context.Response.WriteAsync("Something went wrong");
-            //}
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsync("Something went wrong");
+            }
         }
     }
 }

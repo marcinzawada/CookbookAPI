@@ -45,18 +45,5 @@ namespace CookbookAPI.Controllers
 
             return Ok(vm);
         }
-
-        [HttpPost]
-        [Authorize]
-        [Description("Create new recipe")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create(RecipeRequest request)
-        {
-            var id = await _recipesService.Create(request);
-
-            return Created($"/api/recipes/{id}", null);
-        }
     }
 }
