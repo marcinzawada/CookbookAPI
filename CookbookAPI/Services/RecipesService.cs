@@ -6,10 +6,12 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
+using CookbookAPI.Entities;
 using CookbookAPI.Exceptions;
 using CookbookAPI.Extensions;
 using CookbookAPI.Repositories;
 using CookbookAPI.Requests.Recipes;
+using CookbookAPI.Services.Interfaces;
 using CookbookAPI.ViewModels;
 using CookbookAPI.ViewModels.Recipes;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +24,14 @@ namespace CookbookAPI.Services
         private readonly RecipesRepository _recipesRepository;
         private readonly CookbookDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserContextService _userContextService;
 
-        public RecipesService(RecipesRepository recipesRepository, CookbookDbContext context, IMapper mapper)
+        public RecipesService(RecipesRepository recipesRepository, CookbookDbContext context, IMapper mapper, IUserContextService userContextService)
         {
             _recipesRepository = recipesRepository;
             _context = context;
             _mapper = mapper;
+            _userContextService = userContextService;
         }
 
         public async Task<PaginatedList<RecipeDto>> GetAll(GetRecipesRequest request)
@@ -58,6 +62,20 @@ namespace CookbookAPI.Services
             var recipeDto = _mapper.Map<RecipeDto>(recipe);
 
             return new GetRecipeVm{Recipe = recipeDto};
+        }
+
+        public async Task<int> Create(RecipeRequest request)
+        {
+            var userId = _userContextService.GetUserId;
+            if (userId is null)
+                throw new ForbidException();
+
+            var newRecipe = _mapper.Map<Recipe>(request);
+            newRecipe.UserId = userId;
+
+            await _recipesRepository.Add(newRecipe);
+
+            return newRecipe.Id;
         }
     }
 }
