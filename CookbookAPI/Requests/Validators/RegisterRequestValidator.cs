@@ -33,13 +33,15 @@ namespace CookbookAPI.Requests.Validators
                 .Matches(@"\d").WithMessage("'{PropertyName}' must contain one or more digits.")
                 .Matches(@"[][""!@$%^&*(){}:;<>,.?/+_=|'~\\-]")
                 .WithMessage("'{PropertyName}' must contain one or more special characters.")
-                .Matches("^[^£# “”]*$")
-                .WithMessage("'{PropertyName}' must not contain the following characters £ # “” or spaces.");
+                .Matches("^[^# “”]*$")
+                .WithMessage("'{PropertyName}' must not contain the following characters # “” or spaces.");
 
             RuleFor(x => x.ConfirmPassword)
                 .Equal(e => e.Password).WithMessage("'{PropertyName}' must match 'Password'");
 
             RuleFor(x => x.Name)
+                .MinimumLength(3)
+                .MaximumLength(6)
                 .NotNull()
                 .NotEmpty();
         }
