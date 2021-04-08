@@ -41,7 +41,7 @@ namespace CookbookAPI.Requests.Validators
 
             RuleFor(x => x.Name)
                 .MinimumLength(3)
-                .MaximumLength(6)
+                .MaximumLength(20)
                 .NotNull()
                 .NotEmpty();
         }
