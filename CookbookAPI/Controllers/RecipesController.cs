@@ -38,7 +38,7 @@ namespace CookbookAPI.Controllers
         [Authorize]
         [Description("Get specifed recipe")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             var vm = await _recipesService.GetById(id);
