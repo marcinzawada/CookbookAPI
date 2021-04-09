@@ -118,7 +118,7 @@ namespace CookbookAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISeeder seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISeeder seeder, CookbookDbContext context)
         {
             app.UseCors(builder =>
                 builder
@@ -164,7 +164,12 @@ namespace CookbookAPI
                 options.DocumentPath = "/swagger/v1/swagger.json";
             });
 
-            ConfigureAsync(seeder).Wait();
+
+            if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                ConfigureAsync(seeder).Wait();
+            }
+            
         }
 
         public async Task ConfigureAsync(ISeeder seeder)
