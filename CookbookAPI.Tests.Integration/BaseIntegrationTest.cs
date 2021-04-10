@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Bogus;
 using CookbookAPI.Data;
 using CookbookAPI.Entities;
+using CookbookAPI.Requests.Account;
 using CookbookAPI.Tests.Integration.Helpers;
+using CookbookAPI.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +74,23 @@ namespace CookbookAPI.Tests.Integration
                 });
 
             _testClient = factory.CreateClient();
+        }
+
+        protected async Task AuthenticateAsync()
+        {
+            _testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", await GetJwtAsync());
+        }
+
+        private async Task<string> GetJwtAsync()
+        {
+            var response = await _testClient.PostAsJsonAsync("/api/account/login", new LoginRequest
+            {
+                Email = "test@gmail.com",
+                Password = "Pass123!"
+            });
+
+            var loginVm = await response.Content.ReadAsAsync<LoginVm>();
+            return loginVm.Token;
         }
     }
 }
