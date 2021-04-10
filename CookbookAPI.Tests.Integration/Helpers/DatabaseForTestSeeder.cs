@@ -66,7 +66,7 @@ namespace CookbookAPI.Tests.Integration.Helpers
                 },
                 new Ingredient
                 {
-                    Name = "Tomato"
+                    Name = "Potato"
                 }
             };
 
