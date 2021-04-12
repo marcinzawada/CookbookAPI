@@ -114,6 +114,7 @@ namespace CookbookAPI
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
             services.AddScoped<IValidator<GetRecipesRequest>, GetRecipesRequestValidator>();
+            services.AddScoped<IValidator<RecipeRequest>, RecipeRequestValidator>();
 
         }
 
