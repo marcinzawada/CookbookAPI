@@ -5,7 +5,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CookbookAPI.DTOs;
+using CookbookAPI.DTOs.Recipes;
 using CookbookAPI.Requests.Account;
+using CookbookAPI.Requests.Recipes;
+using CookbookAPI.Tests.Integration.DataClasses;
 using CookbookAPI.ViewModels;
 using CookbookAPI.ViewModels.Recipes;
 using FluentAssertions;
@@ -107,5 +110,54 @@ namespace CookbookAPI.Tests.Integration
 
         }
 
+        [Fact]
+        public async Task Create_WithValidData_ShouldReturnUriToRecipe()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsJsonAsync("/api/recipes", new RecipeRequest
+            {
+                Name = _faker.Lorem.Word(),
+                Instructions = _faker.Lorem.Paragraphs(3),
+                CategoryId = 1,
+                AreaId = 1,
+                Ingredients = new List<RecipeIngredientDto>
+                {
+                    new RecipeIngredientDto
+                    {
+                        IngredientId = 1,
+                        Measure = "100g"
+                    },
+                    new RecipeIngredientDto
+                    {
+                        IngredientId = 2,
+                        Measure = "200ml"
+                    },
+                },
+                Thumbnail = "string",
+                Youtube = "string",
+                Source = "string"
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
+            response.Headers.Location.Should().NotBeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(RecipeDataClass))]
+        public async Task Create_WithIncorrect_ShouldReturnBadRequest(RecipeRequest request)
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsJsonAsync("/api/recipes", request);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
     }
 }
