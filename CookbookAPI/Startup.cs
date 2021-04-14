@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CookbookAPI.ApiClients;
 using CookbookAPI.ApiClients.Interfaces;
+using CookbookAPI.Authorization;
 using CookbookAPI.Common;
 using CookbookAPI.Common.Interfaces;
 using CookbookAPI.Data;
@@ -31,6 +32,7 @@ using CookbookAPI.Services;
 using CookbookAPI.Services.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -115,6 +117,7 @@ namespace CookbookAPI
             services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
             services.AddScoped<IValidator<GetRecipesRequest>, GetRecipesRequestValidator>();
             services.AddScoped<IValidator<RecipeRequest>, RecipeRequestValidator>();
+            services.AddScoped<IAuthorizationHandler, RecipeOperationHandler>();
 
         }
 
