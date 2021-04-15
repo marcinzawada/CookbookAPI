@@ -6,7 +6,7 @@ using CookbookAPI.Entities;
 
 namespace CookbookAPI.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository<TUser> : IBaseRepository<User>
     {
         Task<User> GetByEmail(string email);
     }
