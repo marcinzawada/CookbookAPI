@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CookbookAPI.Repositories
 {
-    public class UserRepository : BaseRepository<User, CookbookDbContext>, IUserRepository
+    public class UserRepository : BaseRepository<User, CookbookDbContext>, IUserRepository<User>
     {
         public UserRepository(CookbookDbContext context) : base(context)
         {

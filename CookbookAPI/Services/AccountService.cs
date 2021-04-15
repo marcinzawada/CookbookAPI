@@ -17,11 +17,11 @@ namespace CookbookAPI.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository<User> _userRepository;
         private readonly IJwtGenerator _jwtGenerator;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AccountService(UserRepository userRepository, IJwtGenerator jwtGenerator, IPasswordHasher<User> passwordHasher)
+        public AccountService(IUserRepository<User> userRepository, IJwtGenerator jwtGenerator, IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
             _jwtGenerator = jwtGenerator;

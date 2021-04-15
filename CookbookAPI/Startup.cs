@@ -23,6 +23,7 @@ using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
 using CookbookAPI.Middleware;
 using CookbookAPI.Repositories;
+using CookbookAPI.Repositories.Interfaces;
 using CookbookAPI.Requests.Account;
 using CookbookAPI.Requests.Recipes;
 using CookbookAPI.Requests.Validators;
@@ -110,7 +111,7 @@ namespace CookbookAPI
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IRecipesService, RecipesService>();
-            services.AddScoped<UserRepository>();
+            services.AddScoped<IUserRepository<User>, UserRepository>();
             services.AddScoped<RecipesRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
