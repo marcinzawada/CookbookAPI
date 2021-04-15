@@ -11,6 +11,7 @@ using CookbookAPI.Entities;
 using CookbookAPI.Exceptions;
 using CookbookAPI.Extensions;
 using CookbookAPI.Repositories;
+using CookbookAPI.Repositories.Interfaces;
 using CookbookAPI.Requests.Recipes;
 using CookbookAPI.Services.Interfaces;
 using CookbookAPI.ViewModels;
@@ -23,14 +24,14 @@ namespace CookbookAPI.Services
 {
     public class RecipesService : IRecipesService
     {
-        private readonly RecipesRepository _recipesRepository;
+        private readonly IRecipesRepository<Recipe> _recipesRepository;
         private readonly CookbookDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
         private readonly IAuthorizationService _authorizationService;
 
 
-        public RecipesService(RecipesRepository recipesRepository, CookbookDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
+        public RecipesService(IRecipesRepository<Recipe> recipesRepository, CookbookDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             _recipesRepository = recipesRepository;
             _context = context;

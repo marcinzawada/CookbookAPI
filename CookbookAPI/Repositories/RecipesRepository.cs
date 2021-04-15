@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using CookbookAPI.Data;
 using CookbookAPI.Entities;
+using CookbookAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookbookAPI.Repositories
 {
-    public class RecipesRepository : BaseRepository<Recipe, CookbookDbContext>
+    public class RecipesRepository : BaseRepository<Recipe, CookbookDbContext>, IRecipesRepository<Recipe>
     {
         public RecipesRepository(CookbookDbContext context) : base(context)
         {
