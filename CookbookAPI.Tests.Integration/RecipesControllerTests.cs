@@ -117,38 +117,40 @@ namespace CookbookAPI.Tests.Integration
             await AuthenticateAsync();
 
             //Act
-            var response = await _testClient.PostAsJsonAsync("/api/recipes", new RecipeRequest
-            {
-                Name = _faker.Lorem.Word(),
-                Instructions = _faker.Lorem.Paragraphs(3),
-                CategoryId = 1,
-                AreaId = 1,
-                Ingredients = new List<RecipeIngredientDto>
-                {
-                    new RecipeIngredientDto
-                    {
-                        IngredientId = 1,
-                        Measure = "100g"
-                    },
-                    new RecipeIngredientDto
-                    {
-                        IngredientId = 2,
-                        Measure = "200ml"
-                    },
-                },
-                Thumbnail = "string",
-                Youtube = "string",
-                Source = "string"
-            });
+            var response = await _testClient.PostAsJsonAsync("/api/recipes", ValidRecipeRequest);
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             response.Headers.Location.Should().NotBeNull();
         }
 
+        private static RecipeRequest ValidRecipeRequest => new RecipeRequest
+        {
+            Name = "test",
+            CategoryId = 1,
+            AreaId = 1,
+            Instructions = _faker.Lorem.Paragraphs(3),
+            Source = _faker.Lorem.Word(),
+            Thumbnail = _faker.Lorem.Word(),
+            Youtube = _faker.Lorem.Word(),
+            Ingredients = new List<RecipeIngredientDto>
+            {
+                new RecipeIngredientDto
+                {
+                    IngredientId = 1,
+                    Measure = "100g"
+                },
+                new RecipeIngredientDto
+                {
+                    IngredientId = 2,
+                    Measure = "777g"
+                }
+            }
+        };
+
         [Theory]
         [ClassData(typeof(RecipeDataClass))]
-        public async Task Create_WithIncorrect_ShouldReturnBadRequest(RecipeRequest request)
+        public async Task Create_WithIncorrectData_ShouldReturnBadRequest(RecipeRequest request)
         {
             //Arrange
             await AuthenticateAsync();
@@ -158,6 +160,59 @@ namespace CookbookAPI.Tests.Integration
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Update_CorrectData_ShouldReturnOkStatus()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync("/api/recipes/1", ValidRecipeRequest);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [ClassData(typeof(RecipeDataClass))]
+        public async Task Update_WithIncorrectData_ShouldReturnBadRequest(RecipeRequest request)
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync("/api/recipes/1", request);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Update_WithWrongRecipeId_ShouldReturnNotFou()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync($"/api/recipes/{int.MinValue}", ValidRecipeRequest);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Update_WithRecipeIdBelongToOtherUser_ShouldReturnForbidden()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync($"/api/recipes/2", ValidRecipeRequest);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
     }
 }
