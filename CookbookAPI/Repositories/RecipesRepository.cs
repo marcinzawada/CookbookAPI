@@ -25,5 +25,14 @@ namespace CookbookAPI.Repositories
 
             return recipe;
         }
+
+        public async Task<Recipe> GetWithRecipeIngredients(int id)
+        {
+            var recipe = await _context.Recipes
+                .Include(x => x.RecipeIngredients)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return recipe;
+        }
     }
 }
