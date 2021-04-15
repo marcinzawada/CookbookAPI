@@ -214,5 +214,44 @@ namespace CookbookAPI.Tests.Integration
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
+
+        [Fact]
+        public async Task Delete_WithRecipeIdBelongToOtherUser_ShouldReturnForbidden()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.DeleteAsync($"/api/recipes/2");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task Delete_WithInvalidRecipeId_ShouldReturnNotFound()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.DeleteAsync($"/api/recipes/{int.MinValue}");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_WithValidRecipeId_ShouldReturnNoContent()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.DeleteAsync($"/api/recipes/1");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
     }
 }
