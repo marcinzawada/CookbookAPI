@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CookbookAPI.Services
 {
-    public class RecipesService
+    public class RecipesService : IRecipesService
     {
         private readonly RecipesRepository _recipesRepository;
         private readonly CookbookDbContext _context;

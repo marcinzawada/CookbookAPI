@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CookbookAPI.Requests.Recipes;
 using CookbookAPI.Services;
+using CookbookAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
@@ -15,9 +16,9 @@ namespace CookbookAPI.Controllers
     [ApiController]
     public class RecipesController : ControllerBase
     {
-        private readonly RecipesService _recipesService;
+        private readonly IRecipesService _recipesService;
 
-        public RecipesController(RecipesService recipesService)
+        public RecipesController(IRecipesService recipesService)
         {
             _recipesService = recipesService;
         }

@@ -99,7 +99,7 @@ namespace CookbookAPI
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IMealApiClient, MealApiClient>();
-            services.AddScoped<IApiClient,ApiClient>();
+            services.AddScoped<IApiClient, ApiClient>();
             services.AddTransient<IRestClient, RestClient>();
             services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
             services.AddScoped<ISeeder, MealDbSeeder>();
@@ -109,7 +109,7 @@ namespace CookbookAPI
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<RecipesService>();
+            services.AddScoped<IRecipesService, RecipesService>();
             services.AddScoped<UserRepository>();
             services.AddScoped<RecipesRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
