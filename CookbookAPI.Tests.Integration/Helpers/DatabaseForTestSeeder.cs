@@ -38,12 +38,14 @@ namespace CookbookAPI.Tests.Integration.Helpers
             {
                 new User
                 {
+                    Id = 1,
                     Email = "test@gmail.com",
                     PasswordHash = _passwordHasher.HashPassword(null, "Pass123!"),
                     Name = "username"
                 },
                 new User
                 {
+                    Id = 2,
                     Email = "test2@gmail.com",
                     PasswordHash = _passwordHasher.HashPassword(null, "Pass123!"),
                     Name = "username"
@@ -123,8 +125,9 @@ namespace CookbookAPI.Tests.Integration.Helpers
             {
                 new Recipe
                 {
+                    Id = 1,
                     Name = "Pizza",
-                    UserId = users.Select(x => x.Id).FirstOrDefault(),
+                    UserId = 1,
                     Area = areas.FirstOrDefault(),
                     Category = categories.FirstOrDefault(),
                     CreatedAt = DateTime.UtcNow,
@@ -144,8 +147,9 @@ namespace CookbookAPI.Tests.Integration.Helpers
                 },
                 new Recipe
                 {
+                    Id = 2,
                     Name = "Spaghetti",
-                    UserId = users.Select(x => x.Id).LastOrDefault(),
+                    UserId = 2,
                     Area = areas.LastOrDefault(),
                     Category = categories.LastOrDefault(),
                     CreatedAt = DateTime.UtcNow,
