@@ -121,5 +121,21 @@ namespace CookbookAPI.Services
             
             await _recipesRepository.Update(recipe);
         }
+
+        public async Task Delete(int id)
+        {
+            var recipe = await _recipesRepository.Get(id);
+
+            if (recipe is null)
+                throw new  NotFoundException("Recipe not found");
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, recipe,
+                new RecipeOperationRequirement(ResourceOperation.Delete));
+
+            if (!authorizationResult.Succeeded)
+                throw new ForbidException();
+
+            await _recipesRepository.Delete(id);
+        }
     }
 }

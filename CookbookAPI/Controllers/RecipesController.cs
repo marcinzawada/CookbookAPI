@@ -66,11 +66,24 @@ namespace CookbookAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(int id, RecipeRequest request)
+        public async Task<IActionResult> Update([FromRoute] int id, RecipeRequest request)
         {
             await _recipesService.Update(id, request);
 
             return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        [Description("Delete recipe")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            await _recipesService.Delete(id);
+
+            return NoContent();
         }
     }
 }
