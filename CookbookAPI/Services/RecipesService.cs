@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CookbookAPI.Authorization;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
 using CookbookAPI.Entities;
@@ -14,6 +15,7 @@ using CookbookAPI.Requests.Recipes;
 using CookbookAPI.Services.Interfaces;
 using CookbookAPI.ViewModels;
 using CookbookAPI.ViewModels.Recipes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,13 +27,16 @@ namespace CookbookAPI.Services
         private readonly CookbookDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public RecipesService(RecipesRepository recipesRepository, CookbookDbContext context, IMapper mapper, IUserContextService userContextService)
+
+        public RecipesService(RecipesRepository recipesRepository, CookbookDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             _recipesRepository = recipesRepository;
             _context = context;
             _mapper = mapper;
             _userContextService = userContextService;
+            _authorizationService = authorizationService;
         }
 
         public async Task<PaginatedList<RecipeDto>> GetAll(GetRecipesRequest request)
@@ -76,6 +81,45 @@ namespace CookbookAPI.Services
             await _recipesRepository.Add(newRecipe);
 
             return newRecipe.Id;
+        }
+
+        public async Task Update(int id, RecipeRequest request)
+        {
+            var recipe = await _recipesRepository.GetWithRecipeIngredients(id);
+
+            if (recipe is null)
+                throw new NotFoundException("Recipe not found");
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, recipe,
+                new RecipeOperationRequirement(ResourceOperation.Update));
+
+            if (!authorizationResult.Succeeded)
+                throw new ForbidException();
+
+            var newRecipeIngredients = request.Ingredients.Select(x =>
+                new RecipeIngredient {IngredientId = x.IngredientId, Measure = x.Measure, RecipeId = id}).ToList();
+
+            foreach (var recipeIngredient in recipe.RecipeIngredients.ToList())
+            {
+                if (!newRecipeIngredients.Contains(recipeIngredient))
+                    recipe.RecipeIngredients.Remove(recipeIngredient);
+            }
+
+            foreach (var newRecipeIngredient in newRecipeIngredients)
+            {
+                if (!recipe.RecipeIngredients.Any(x => x.Equals(newRecipeIngredient)))
+                    recipe.RecipeIngredients.Add(newRecipeIngredient);
+            }
+
+            recipe.AreaId = request.AreaId;
+            recipe.CategoryId = request.CategoryId;
+            recipe.Instructions = request.Instructions;
+            recipe.Name = request.Name;
+            recipe.Youtube = recipe.Youtube;
+            recipe.Source = recipe.Source;
+            recipe.UpdatedAt = DateTime.UtcNow;
+            
+            await _recipesRepository.Update(recipe);
         }
     }
 }
