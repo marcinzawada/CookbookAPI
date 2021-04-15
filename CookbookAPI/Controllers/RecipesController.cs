@@ -58,5 +58,19 @@ namespace CookbookAPI.Controllers
 
             return Created($"/api/recipes/{id}", null);
         }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        [Description("Update recipe")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(int id, RecipeRequest request)
+        {
+            await _recipesService.Update(id, request);
+
+            return Ok();
+        }
     }
 }
