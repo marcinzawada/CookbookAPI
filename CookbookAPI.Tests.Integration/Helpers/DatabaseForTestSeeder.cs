@@ -124,6 +124,7 @@ namespace CookbookAPI.Tests.Integration.Helpers
                 new Recipe
                 {
                     Name = "Pizza",
+                    UserId = users.Select(x => x.Id).FirstOrDefault(),
                     Area = areas.FirstOrDefault(),
                     Category = categories.FirstOrDefault(),
                     CreatedAt = DateTime.UtcNow,
@@ -144,6 +145,7 @@ namespace CookbookAPI.Tests.Integration.Helpers
                 new Recipe
                 {
                     Name = "Spaghetti",
+                    UserId = users.Select(x => x.Id).LastOrDefault(),
                     Area = areas.LastOrDefault(),
                     Category = categories.LastOrDefault(),
                     CreatedAt = DateTime.UtcNow,
