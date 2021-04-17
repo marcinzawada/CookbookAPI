@@ -18,5 +18,7 @@ namespace CookbookAPI.Entities
         public string PasswordHash { get; set; }
 
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
+
+        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>(); 
     }
 }
