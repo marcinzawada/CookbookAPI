@@ -22,22 +22,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CookbookAPI.Services
 {
-    public class RecipesService : IRecipesService
+    public class RecipesService : BaseService, IRecipesService
     {
         private readonly IRecipesRepository<Recipe> _recipesRepository;
-        private readonly CookbookDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IUserContextService _userContextService;
-        private readonly IAuthorizationService _authorizationService;
 
-
-        public RecipesService(IRecipesRepository<Recipe> recipesRepository, CookbookDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
+        public RecipesService(IRecipesRepository<Recipe> recipesRepository, CookbookDbContext context,
+            IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService) 
+            : base(context, mapper, userContextService, authorizationService)
         {
             _recipesRepository = recipesRepository;
-            _context = context;
-            _mapper = mapper;
-            _userContextService = userContextService;
-            _authorizationService = authorizationService;
         }
 
         public async Task<PaginatedList<RecipeDto>> GetAll(GetRecipesRequest request)
