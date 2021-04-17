@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210415174822_AddedUserIdToIngredientsTable.cs" />
+    <Compile Remove="Migrations\20210415174822_AddedUserIdToIngredientsTable.Designer.cs" />
+    <Compile Remove="Migrations\20210415175208_AddedUserIdToIngredientsTable.cs" />
+    <Compile Remove="Migrations\20210415175208_AddedUserIdToIngredientsTable.Designer.cs" />
+    <Compile Remove="Migrations\20210415175614_AddedUserIdToIngredientsTable.cs" />
+    <Compile Remove="Migrations\20210415175614_AddedUserIdToIngredientsTable.Designer.cs" />
+    <Compile Remove="Migrations\20210415175949_AddedUserIdToIngredientsTable.cs" />
+    <Compile Remove="Migrations\20210415175949_AddedUserIdToIngredientsTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.5.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.13" />
