@@ -19,12 +19,14 @@ using CookbookAPI.Common.Interfaces;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
+using CookbookAPI.Extensions.StartupInstallers;
 using CookbookAPI.Mappers;
 using CookbookAPI.Mappers.Interfaces;
 using CookbookAPI.Middleware;
 using CookbookAPI.Repositories;
 using CookbookAPI.Repositories.Interfaces;
 using CookbookAPI.Requests.Account;
+using CookbookAPI.Requests.Ingredients;
 using CookbookAPI.Requests.Recipes;
 using CookbookAPI.Requests.Validators;
 using CookbookAPI.Seeders;
@@ -55,71 +57,22 @@ namespace CookbookAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddFluentValidation();
+            services.AddControllers()
+                .AddFluentValidation(opt => opt.RegisterValidatorsFromAssembly(this.GetType().Assembly));
 
-            var authenticationSettings = new AuthenticationSettings();
-
-            Configuration.GetSection("Authentication").Bind(authenticationSettings);
-            services.AddSingleton(authenticationSettings);
-
-            services.AddAuthentication(option =>
-            {
-                option.DefaultAuthenticateScheme = "Bearer";
-                option.DefaultScheme = "Bearer";
-                option.DefaultChallengeScheme = "Bearer";
-            }).AddJwtBearer(cfg =>
-            {
-                cfg.RequireHttpsMetadata = false;
-                cfg.SaveToken = true;
-                cfg.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
-                };
-            });
+            services.InstallAuthentication(Configuration);
 
             services.AddAuthorization();
 
-            services.AddSwaggerDocument(document =>
-            {
-                document.Title = "Cookbook API Documentation";
-                document.DocumentName = "swagger";
-                document.OperationProcessors.Add(new OperationSecurityScopeProcessor("jwt"));
-                document.DocumentProcessors.Add(new SecurityDefinitionAppender("jwt", new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Description = "JWT Token - remember to add 'Bearer ' before the token",
-                }));
-            });
+            services.InstallSwagger(Configuration);
 
             var connectionString = Configuration.GetConnectionString("LocalDb");
             services.AddDbContext<CookbookDbContext>(x => x.UseSqlServer(connectionString));
 
             services.AddAutoMapper(this.GetType().Assembly);
-            services.AddScoped<IMealApiClient, MealApiClient>();
-            services.AddScoped<IApiClient, ApiClient>();
-            services.AddTransient<IRestClient, RestClient>();
-            services.AddScoped<IDtoToEntityMapper<MealRecipeDto, Recipe>, MealRecipeDtoToRecipeMapper>();
-            services.AddScoped<ISeeder, MealDbSeeder>();
-            services.AddHttpContextAccessor();
             services.AddCors();
-            services.AddScoped<RequestTimeMiddleware>();
-            services.AddScoped<ErrorHandlingMiddleware>();
-            services.AddScoped<IUserContextService, UserContextService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IRecipesService, RecipesService>();
-            services.AddScoped<IUserRepository<User>, UserRepository>();
-            services.AddScoped<IRecipesRepository<Recipe>, RecipesRepository>();
-            services.AddScoped<IJwtGenerator, JwtGenerator>();
-            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
-            services.AddScoped<IValidator<GetRecipesRequest>, GetRecipesRequestValidator>();
-            services.AddScoped<IValidator<RecipeRequest>, RecipeRequestValidator>();
-            services.AddScoped<IAuthorizationHandler, RecipeOperationHandler>();
 
+            services.InstallDependencyInjection(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -174,7 +127,7 @@ namespace CookbookAPI
             {
                 ConfigureAsync(seeder).Wait();
             }
-            
+
         }
 
         public async Task ConfigureAsync(ISeeder seeder)
