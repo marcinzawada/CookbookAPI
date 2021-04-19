@@ -61,7 +61,6 @@ namespace CookbookAPI.Tests.Integration
             await AuthenticateAsync();
             var query = Dictionary(searchPhrase, pageNumber, pageSize, sortBy, sortDirection);
 
-
             //Act
             var response = await _testClient.GetAsync(QueryHelpers.AddQueryString("/api/recipes", query));
 
@@ -69,8 +68,8 @@ namespace CookbookAPI.Tests.Integration
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
-        private static Dictionary<string, string> Dictionary(string searchPhrase, int pageNumber, int pageSize, string sortBy,
-            string sortDirection)
+        private static Dictionary<string, string> Dictionary(string searchPhrase,
+            int pageNumber, int pageSize, string sortBy, string sortDirection)
         {
             return new Dictionary<string, string>
             {
