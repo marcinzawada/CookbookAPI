@@ -38,8 +38,6 @@ namespace CookbookAPI.Tests.Integration
 
                         services.Remove(descriptor);
 
-                        //services.RemoveAll(typeof(CookbookDbContext));
-
                         services.AddDbContext<CookbookDbContext>(options =>
                         {
                             options.UseInMemoryDatabase("InMemoryDatabaseForTesting");
