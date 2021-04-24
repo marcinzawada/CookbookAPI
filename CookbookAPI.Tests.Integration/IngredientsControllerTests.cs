@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CookbookAPI.DTOs;
+using CookbookAPI.Requests.Ingredients;
 using CookbookAPI.ViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
@@ -74,6 +75,38 @@ namespace CookbookAPI.Tests.Integration
                 ["SortBy"] = sortBy,
                 ["SortDirection"] = sortDirection
             };
+        }
+
+        [Fact]
+        public async Task Create_WithInvalidRequestData_ShouldReturnBadRequest()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsJsonAsync("/api/ingredients", new IngredientRequest
+            {
+                Name = ""
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Create_WithValidRequestData_ShouldReturnCreated()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsJsonAsync("/api/ingredients", new IngredientRequest
+            {
+                Name = "testName"
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
         }
     }
 }
