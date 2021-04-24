@@ -9,6 +9,7 @@ namespace CookbookAPI.Requests.Ingredients
     public class IngredientRequest
     {
         [Required]
+        [MinLength(2)]
         public string Name { get; set; }
 
         public string Description { get; set; }
