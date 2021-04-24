@@ -33,5 +33,17 @@ namespace CookbookAPI.Controllers
 
             return Ok(vm);
         }
+
+        [HttpPost]
+        [Authorize]
+        [Description("Create new ingredient")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Created([FromBody] IngredientRequest request)
+        { 
+            var id = await _ingredientsService.Create(request);
+
+            return Created($"api/ingredients/{id}", null);
+        }
     }
 }
