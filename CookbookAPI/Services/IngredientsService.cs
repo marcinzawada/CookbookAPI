@@ -6,7 +6,10 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
+using CookbookAPI.Entities;
+using CookbookAPI.Exceptions;
 using CookbookAPI.Extensions;
+using CookbookAPI.Repositories.Interfaces;
 using CookbookAPI.Requests.Ingredients;
 using CookbookAPI.Requests.Recipes;
 using CookbookAPI.Services.Interfaces;
@@ -20,10 +23,14 @@ namespace CookbookAPI.Services
 {
     public class IngredientsService : BaseService, IIngredientsService
     {
+        private readonly IIngredientsRepository<Ingredient> _ingredientsRepository;
+
         public IngredientsService(CookbookDbContext context, IMapper mapper,
-            IUserContextService userContextService, IAuthorizationService authorizationService) 
+            IUserContextService userContextService, IAuthorizationService authorizationService, 
+            IIngredientsRepository<Ingredient> ingredientsRepository)
             : base(context, mapper, userContextService, authorizationService)
         {
+            _ingredientsRepository = ingredientsRepository;
         }
 
         public async Task<PaginatedList<IngredientDto>> GetAll(GetIngredientsRequest request)
@@ -44,9 +51,19 @@ namespace CookbookAPI.Services
             throw new NotImplementedException();
         }
 
-        public Task<int> Create(IngredientRequest request)
+        public async Task<int> Create(IngredientRequest request)
         {
-            throw new NotImplementedException();
+            var userId = _userContextService.GetUserId;
+            if (userId == null)
+                throw new ForbidException();
+
+            var newIngredient = _mapper.Map<Ingredient>(request);
+
+            newIngredient.UserId = userId;
+
+            await _ingredientsRepository.Add(newIngredient);
+
+            return newIngredient.Id;
         }
 
         public Task Update(int id, IngredientRequest request)
