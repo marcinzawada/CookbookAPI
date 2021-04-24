@@ -6,6 +6,7 @@ using AutoMapper;
 using CookbookAPI.DTOs;
 using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
+using CookbookAPI.Requests.Ingredients;
 using CookbookAPI.Requests.Recipes;
 
 namespace CookbookAPI.Mappers
@@ -34,6 +35,8 @@ namespace CookbookAPI.Mappers
                         { IngredientId = y.IngredientId, Measure = y.Measure })))
                 .ForMember(x => x.CreatedAt, opt =>
                     opt.MapFrom(y => DateTime.UtcNow));
+
+            CreateMap<IngredientRequest, Ingredient>();
         }
     }
 }
