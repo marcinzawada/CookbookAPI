@@ -72,5 +72,18 @@ namespace CookbookAPI.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        [Description("Delete ingredient")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            await _ingredientsService.Delete(id);
+
+            return NoContent();
+        }
     }
 }
