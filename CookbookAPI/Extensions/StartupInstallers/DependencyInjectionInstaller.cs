@@ -50,10 +50,12 @@ namespace CookbookAPI.Extensions.StartupInstallers
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IRecipesService, RecipesService>();
             services.AddScoped<IIngredientsService, IngredientsService>();
+            services.AddScoped<IAreasService, AreasService>();
 
             services.AddScoped<IUserRepository<User>, UserRepository>();
             services.AddScoped<IRecipesRepository<Recipe>, RecipesRepository>();
             services.AddScoped<IIngredientsRepository<Ingredient>, IngredientsRepository>();
+            services.AddScoped<IAreasRepository<Area>, AreasRepository>();
             
             services.AddScoped<IAuthorizationHandler, RecipeOperationHandler>();
             services.AddScoped<IAuthorizationHandler, IngredientOperationHandler>();
