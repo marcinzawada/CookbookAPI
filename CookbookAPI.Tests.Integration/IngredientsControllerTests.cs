@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CookbookAPI.DTOs;
 using CookbookAPI.Requests.Ingredients;
 using CookbookAPI.ViewModels;
+using CookbookAPI.ViewModels.Ingredients;
 using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
@@ -107,6 +108,35 @@ namespace CookbookAPI.Tests.Integration
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
+        }
+
+        [Fact]
+        public async Task GetById_WithValidIngredientId_ShouldReturnIngredientWithRecipes()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.GetAsync("/api/ingredients/1/recipes");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            (await response.Content.ReadAsAsync<GetIngredientVm>()).Name.Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        public async Task GetById_WithInvalidIngredientId_ShouldReturnNotFound(int id)
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.GetAsync($"/api/ingredients/{id}/recipes");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }
