@@ -138,5 +138,74 @@ namespace CookbookAPI.Tests.Integration
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
+
+        [Fact]
+        public async Task Update_WithValidRequestData_ShouldReturnOk()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync("/api/ingredients/3", new IngredientRequest
+            {
+                Name = "Changed name",
+                Description = "Changed description"
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        public async Task Update_WithInvalidIngredientId_ShouldReturnNotFound(int id)
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync($"/api/ingredients/{id}", new IngredientRequest
+            {
+                Name = "Changed name",
+                Description = "Changed description"
+            });
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Update_IngredientThatIsUseByAnotherUser_ShouldReturnBadRequest()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync("/api/ingredients/1", new IngredientRequest
+            {
+                Name = "Changed name",
+                Description = "Changed description"
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Update_WithInvalidData_ShouldReturnBadRequest()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync("/api/ingredients/1", new IngredientRequest
+            {
+                Name = "",
+                Description = "Changed description"
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
     }
 }
