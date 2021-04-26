@@ -207,5 +207,22 @@ namespace CookbookAPI.Tests.Integration
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
+
+        [Fact]
+        public async Task Update_IngredientThatBelongToOtherUser_ShouldReturnForbidden()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PutAsJsonAsync("/api/ingredients/2", new IngredientRequest
+            {
+                Name = "Changed name",
+                Description = "Changed description"
+            });
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
     }
 }
