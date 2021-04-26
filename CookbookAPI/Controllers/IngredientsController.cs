@@ -52,11 +52,25 @@ namespace CookbookAPI.Controllers
         [Description("Create new ingredient")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Created([FromBody] IngredientRequest request)
+        public async Task<IActionResult> Create([FromBody] IngredientRequest request)
         { 
             var id = await _ingredientsService.Create(request);
 
             return Created($"api/ingredients/{id}", null);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        [Description("Update ingredient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update([FromBody] IngredientRequest request, 
+            [FromRoute] int id)
+        {
+            await _ingredientsService.Update(id, request);
+
+            return Ok();
         }
     }
 }
