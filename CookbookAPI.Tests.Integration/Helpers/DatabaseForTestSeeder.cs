@@ -73,6 +73,12 @@ namespace CookbookAPI.Tests.Integration.Helpers
                     Id = 2,
                     Name = "Potato",
                     UserId = 1
+                },
+                new Ingredient
+                {
+                    Id = 3,
+                    Name = "Onion",
+                    UserId = 1
                 }
             };
 
@@ -139,12 +145,12 @@ namespace CookbookAPI.Tests.Integration.Helpers
                     {
                         new RecipeIngredient
                         {
-                            Ingredient = ingredients.FirstOrDefault(),
+                            IngredientId = 1,
                             Measure = "1 kg"
                         },
                         new RecipeIngredient
                         {
-                            Ingredient = ingredients.LastOrDefault(),
+                            IngredientId = 2,
                             Measure = "300 ml"
                         }
                     }
@@ -161,14 +167,36 @@ namespace CookbookAPI.Tests.Integration.Helpers
                     {
                         new RecipeIngredient
                         {
-                            Ingredient = ingredients.FirstOrDefault(),
+                            IngredientId = 1,
                             Measure = "5 kg"
                         },
                         new RecipeIngredient
                         {
-                            Ingredient = ingredients.LastOrDefault(),
+                            IngredientId = 2,
                             Measure = "100 ml"
                         }
+                    }
+                },
+                new Recipe
+                {
+                    Id = 3,
+                    Name = "Kebab",
+                    UserId = 1,
+                    Area = areas.LastOrDefault(),
+                    Category = categories.LastOrDefault(),
+                    CreatedAt = DateTime.UtcNow,
+                    RecipeIngredients = new List<RecipeIngredient>
+                    {
+                        new RecipeIngredient
+                        {
+                            IngredientId = 1,
+                            Measure = "5 kg"
+                        },
+                        new RecipeIngredient
+                        {
+                            IngredientId = 3,
+                            Measure = "100 ml"
+                        },
                     }
                 }
             };
