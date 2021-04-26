@@ -108,9 +108,27 @@ namespace CookbookAPI.Services
             await _ingredientsRepository.Update(ingredient);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var ingredient = await _ingredientsRepository.Get(id);
+            if (ingredient == null)
+                throw new NotFoundException($"Ingredient with id: {id} not found");
+
+            var userId = _userContextService.GetUserId;
+            if (userId is null || userId != ingredient.UserId)
+                throw new ForbidException();
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, ingredient,
+                new IngredientOperationRequirement(ResourceOperation.Delete));
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new BadRequestException(
+                    "You cannot update this recipe, because another" +
+                    " user use this ingredient in his recipe");
+            }
+
+            await _ingredientsRepository.Delete(id);
         }
     }
 }
