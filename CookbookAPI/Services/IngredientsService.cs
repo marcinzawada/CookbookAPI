@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
+using CookbookAPI.DTOs.Ingredients;
 using CookbookAPI.Entities;
 using CookbookAPI.Exceptions;
 using CookbookAPI.Extensions;
@@ -46,9 +47,23 @@ namespace CookbookAPI.Services
             return paginatedRecipes;
         }
 
-        public Task<GetIngredientVm> GetById(int id)
+        public async Task<GetIngredientVm> GetById(int id)
         {
-            throw new NotImplementedException();
+            var ingredient = await _ingredientsRepository.GetByIdWithRecipes(id);
+            if (ingredient == null)
+                throw new NotFoundException($"Ingredient with id: {id} not found");
+
+            var recipes = ingredient.RecipeIngredient.Select(x => x.Recipe).ToList();
+
+            var recipesDto =
+                _mapper.Map<List<IngredientRecipeDto>>(recipes);
+
+            return new GetIngredientVm
+            {
+                Name = ingredient.Name,
+                Description = ingredient.Description,
+                Recipes = recipesDto
+            };
         }
 
         public async Task<int> Create(IngredientRequest request)
