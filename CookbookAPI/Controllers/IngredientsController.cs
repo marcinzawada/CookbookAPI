@@ -34,6 +34,19 @@ namespace CookbookAPI.Controllers
             return Ok(vm);
         }
 
+        [HttpGet("{id}/recipes")]
+        [Authorize]
+        [Description("Get specifed ingredient with all recipes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            var vm = await _ingredientsService.GetById(id);
+
+            return Ok(vm);
+        }
+
         [HttpPost]
         [Authorize]
         [Description("Create new ingredient")]
