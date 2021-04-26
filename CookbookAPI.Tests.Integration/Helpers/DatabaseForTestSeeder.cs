@@ -64,11 +64,13 @@ namespace CookbookAPI.Tests.Integration.Helpers
             {
                 new Ingredient
                 {
+                    Id = 1,
                     Name = "Tomato",
                     UserId = 1
                 },
                 new Ingredient
                 {
+                    Id = 2,
                     Name = "Potato",
                     UserId = 1
                 }
