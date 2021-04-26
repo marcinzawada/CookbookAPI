@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CookbookAPI.Authorization;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
 using CookbookAPI.DTOs.Ingredients;
@@ -81,9 +82,30 @@ namespace CookbookAPI.Services
             return newIngredient.Id;
         }
 
-        public Task Update(int id, IngredientRequest request)
+        public async Task Update(int id, IngredientRequest request)
         {
-            throw new NotImplementedException();
+            var ingredient = await _ingredientsRepository.Get(id);
+            if (ingredient == null)
+                throw new NotFoundException($"Ingredient with id: {id} not found");
+
+            var userId = _userContextService.GetUserId;
+            if (userId is null || userId != ingredient.UserId)
+                throw new ForbidException();
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, ingredient,
+                new IngredientOperationRequirement(ResourceOperation.Update));
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new BadRequestException(
+                    "You cannot update this recipe, because another" +
+                    " user use this ingredient in his recipe");
+            }
+
+            ingredient.Name = request.Name;
+            ingredient.Description = request.Description;
+
+            await _ingredientsRepository.Update(ingredient);
         }
 
         public Task Delete(int id)
