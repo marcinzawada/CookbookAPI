@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CookbookAPI.DTOs;
+using CookbookAPI.DTOs.Ingredients;
 using CookbookAPI.DTOs.MealDB;
 using CookbookAPI.Entities;
 using CookbookAPI.Requests.Ingredients;
@@ -37,6 +38,8 @@ namespace CookbookAPI.Mappers
                     opt.MapFrom(y => DateTime.UtcNow));
 
             CreateMap<IngredientRequest, Ingredient>();
+
+            CreateMap<Recipe, IngredientRecipeDto>();
         }
     }
 }
