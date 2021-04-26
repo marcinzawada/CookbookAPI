@@ -72,7 +72,7 @@ namespace CookbookAPI.Tests.Integration.Helpers
                 {
                     Id = 2,
                     Name = "Potato",
-                    UserId = 1
+                    UserId = 2
                 },
                 new Ingredient
                 {
