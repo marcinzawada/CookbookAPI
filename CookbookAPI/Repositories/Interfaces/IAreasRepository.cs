@@ -8,5 +8,6 @@ namespace CookbookAPI.Repositories.Interfaces
 {
     public interface IAreasRepository<TArea> : IBaseRepository<Area>
     {
+        public Task<Area> GetByIdWithRecipes(int id);
     }
 }
