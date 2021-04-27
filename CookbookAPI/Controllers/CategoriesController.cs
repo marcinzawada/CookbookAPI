@@ -31,5 +31,17 @@ namespace CookbookAPI.Controllers
 
             return Ok(vm);
         }
+
+        [HttpGet("{id}/recipes")]
+        [Authorize]
+        [Description("Get specifed category with all recipes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            var vm = await _categoriesService.GetById(id);
+
+            return Ok(vm);
+        }
     }
 }
