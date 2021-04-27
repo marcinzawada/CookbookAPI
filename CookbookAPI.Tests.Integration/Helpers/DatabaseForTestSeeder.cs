@@ -114,10 +114,12 @@ namespace CookbookAPI.Tests.Integration.Helpers
             {
                 new Area
                 {
+                    Id = 1,
                     Name = "Poland"
                 },
                 new Area
                 {
+                    Id = 2,
                     Name = "France"
                 }
             };
