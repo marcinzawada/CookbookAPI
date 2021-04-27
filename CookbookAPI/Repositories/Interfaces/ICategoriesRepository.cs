@@ -8,5 +8,6 @@ namespace CookbookAPI.Repositories.Interfaces
 {
     public interface ICategoriesRepository<TCategory> : IBaseRepository<Category>
     {
+        public Task<Category> GetByIdWithRecipes(int id);
     }
 }
