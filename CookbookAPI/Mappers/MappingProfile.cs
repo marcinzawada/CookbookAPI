@@ -44,6 +44,8 @@ namespace CookbookAPI.Mappers
             CreateMap<Area, AreaDto>();
 
             CreateMap<Recipe, BaseRecipeDto>();
+
+            CreateMap<Category, CategoryDto>();
         }
     }
 }
