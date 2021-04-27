@@ -6,6 +6,7 @@ using AutoMapper;
 using CookbookAPI.Data;
 using CookbookAPI.DTOs;
 using CookbookAPI.Entities;
+using CookbookAPI.Exceptions;
 using CookbookAPI.Repositories.Interfaces;
 using CookbookAPI.Services.Interfaces;
 using CookbookAPI.ViewModels.Areas;
@@ -35,6 +36,23 @@ namespace CookbookAPI.Services
             return new GetAllCategoriesVm
             {
                 Categories = categoryDtos
+            };
+        }
+
+        public async Task<GetCategoryVm> GetById(int id)
+        {
+            var area = await _categoriesRepository.GetByIdWithRecipes(id);
+
+            if (area == null)
+                throw new NotFoundException($"Category with id:{id} not found");
+
+            var recipeDtos = _mapper.Map<List<BaseRecipeDto>>(area.Recipes);
+
+            return new GetCategoryVm
+            {
+                Id = area.Id,
+                Name = area.Name,
+                Recipes = recipeDtos
             };
         }
     }
