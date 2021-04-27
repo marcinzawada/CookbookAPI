@@ -8,6 +8,10 @@ namespace CookbookAPI.ViewModels.Areas
 {
     public class GetAreaVm
     {
-        public List<AreaDto> Areas { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public List<BaseRecipeDto> Recipes { get; set; }
     }
 }
