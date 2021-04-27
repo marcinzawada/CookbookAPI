@@ -94,10 +94,12 @@ namespace CookbookAPI.Tests.Integration.Helpers
             {
                 new Category
                 {
+                    Id = 1,
                     Name = "Breakfast"
                 },
                 new Category
                 {
+                    Id = 2,
                     Name = "Lunch"
                 }
             };
