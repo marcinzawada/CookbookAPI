@@ -8,6 +8,8 @@ namespace CookbookAPI.Services.Interfaces
 {
     public interface IAreasService
     {
-        public Task<GetAreaVm> GetAll();
+        public Task<GetAllAreaVm> GetAll();
+
+        public Task<GetAreaVm> GetById(int id);
     }
 }
