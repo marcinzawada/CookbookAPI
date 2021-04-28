@@ -269,7 +269,7 @@ namespace CookbookAPI.Tests.Integration
         }
 
         [Fact]
-        public async Task GetAllFavorites_WithoutValidAuthorizationHeader_ShouldReturnUnauthoraized()
+        public async Task GetAllFavorites_WithoutValidAuthorizationHeader_ShouldReturnUnauthorized()
         {
             //Arrange
 
@@ -278,6 +278,47 @@ namespace CookbookAPI.Tests.Integration
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task AddToFavorites_WithValidRecipeId_ShouldReturnOk()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsync("/api/recipes/favorites/3", null);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        public async Task AddToFavorites_WithInvalidRecipeId_ShouldReturnNotFound(int id)
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsync($"/api/recipes/favorites/{id}", null);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task AddToFavorites_WithRecipeThatIsAlreadyInFavorites_ShouldReturnBadRequest()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.PostAsync("/api/recipes/favorites/1", null);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }
