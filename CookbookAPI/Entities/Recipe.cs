@@ -42,7 +42,5 @@ namespace CookbookAPI.Entities
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
-
-        public List<UserFavoriteRecipe> LikedByUsers { get; set; } = new List<UserFavoriteRecipe>();
     }
 }
