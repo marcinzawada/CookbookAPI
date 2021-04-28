@@ -21,6 +21,8 @@ namespace CookbookAPI.Data
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<UserFavoriteRecipe> UserFavoriteRecipes { get; set; }
+
         public CookbookDbContext(DbContextOptions<CookbookDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,6 +37,17 @@ namespace CookbookAPI.Data
                 .HasOne(ri => ri.Ingredient)
                 .WithMany(i => i.RecipeIngredient)
                 .HasForeignKey(ri => ri.IngredientId);
+
+            modelBuilder.Entity<UserFavoriteRecipe>()
+                .HasKey(x => new { x.RecipeId, x.UserId });
+            modelBuilder.Entity<UserFavoriteRecipe>()
+                .HasOne(ufr => ufr.User)
+                .WithMany(u => u.Favorites)
+                .HasForeignKey(ufr => ufr.UserId);
+            modelBuilder.Entity<UserFavoriteRecipe>()
+                .HasOne(ufr => ufr.Recipe)
+                .WithMany(r => r.LikedByUsers)
+                .HasForeignKey(ufr => ufr.RecipeId);
         }
     }
 }
