@@ -320,5 +320,46 @@ namespace CookbookAPI.Tests.Integration
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
+
+        [Fact]
+        public async Task DeleteFavorites_WithValidRecipeId_ShouldReturnNoContent()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.DeleteAsync("/api/recipes/favorites/4");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+
+        [Theory]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        public async Task DeleteFavorites_WithInvalidRecipeId_ShouldReturnNotFound(int id)
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.DeleteAsync($"/api/recipes/favorites/{id}");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task DeleteFavorites_WithRecipeThatNotExistInFavorites_ShouldReturnBadRequest()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.DeleteAsync("/api/recipes/favorites/3");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
     }
 }
