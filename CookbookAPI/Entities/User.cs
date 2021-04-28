@@ -19,6 +19,8 @@ namespace CookbookAPI.Entities
 
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
 
-        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>(); 
+        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+
+        public List<UserFavoriteRecipe> FavoriteRecipes { get; set; } = new List<UserFavoriteRecipe>();
     }
 }
