@@ -97,5 +97,17 @@ namespace CookbookAPI.Controllers
 
             return Ok(vm);
         }
+
+        [HttpPost("favorites/{id}")]
+        [Authorize]
+        [Description("Add to favorites")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AddToFavorites(int id)
+        {
+            await _recipesService.AddToFavorites(id);
+
+            return Ok();
+        }
     }
 }
