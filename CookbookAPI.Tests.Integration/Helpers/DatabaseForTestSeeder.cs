@@ -29,6 +29,7 @@ namespace CookbookAPI.Tests.Integration.Helpers
             var categories = SeedCategories();
             var areas = SeedAreas();
             SeedRecipes(users, ingredients, categories, areas);
+            SeedFavoriteRecipes();
 
         }
 
@@ -206,6 +207,26 @@ namespace CookbookAPI.Tests.Integration.Helpers
             };
 
             _context.Recipes.AddRange(recipes);
+            _context.SaveChanges();
+        }
+
+        private void SeedFavoriteRecipes()
+        {
+            var favorites = new List<UserFavoriteRecipe>
+            {
+                new UserFavoriteRecipe
+                {
+                    UserId = 1,
+                    RecipeId = 1
+                },
+                new UserFavoriteRecipe
+                {
+                    UserId = 1,
+                    RecipeId = 2
+                },
+            };
+
+            _context.UserFavoriteRecipes.AddRange(favorites);
             _context.SaveChanges();
         }
     }
