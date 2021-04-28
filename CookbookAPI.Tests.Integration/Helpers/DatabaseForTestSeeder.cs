@@ -203,6 +203,28 @@ namespace CookbookAPI.Tests.Integration.Helpers
                             Measure = "100 ml"
                         },
                     }
+                },
+                new Recipe
+                {
+                    Id = 4,
+                    Name = "Sushi",
+                    UserId = 1,
+                    Area = areas.LastOrDefault(),
+                    Category = categories.LastOrDefault(),
+                    CreatedAt = DateTime.UtcNow,
+                    RecipeIngredients = new List<RecipeIngredient>
+                    {
+                        new RecipeIngredient
+                        {
+                            IngredientId = 1,
+                            Measure = "5 kg"
+                        },
+                        new RecipeIngredient
+                        {
+                            IngredientId = 3,
+                            Measure = "100 ml"
+                        },
+                    }
                 }
             };
 
@@ -223,6 +245,11 @@ namespace CookbookAPI.Tests.Integration.Helpers
                 {
                     UserId = 1,
                     RecipeId = 2
+                },
+                new UserFavoriteRecipe
+                {
+                    UserId = 1,
+                    RecipeId = 4
                 },
             };
 
