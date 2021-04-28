@@ -86,5 +86,16 @@ namespace CookbookAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("favorites")]
+        [Authorize]
+        [Description("Get all favorites")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllFavorites()
+        {
+            var vm = await _recipesService.GetAllFavorites();
+
+            return Ok(vm);
+        }
     }
 }
