@@ -42,7 +42,7 @@ namespace CookbookAPI.Data
                 .HasKey(x => new { x.RecipeId, x.UserId });
             modelBuilder.Entity<UserFavoriteRecipe>()
                 .HasOne(ufr => ufr.User)
-                .WithMany(u => u.Favorites)
+                .WithMany(u => u.FavoriteRecipes)
                 .HasForeignKey(ufr => ufr.UserId);
             modelBuilder.Entity<UserFavoriteRecipe>()
                 .HasOne(ufr => ufr.Recipe)
