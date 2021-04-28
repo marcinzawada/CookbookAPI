@@ -27,7 +27,7 @@ namespace CookbookAPI.Services
         private readonly IRecipesRepository<Recipe> _recipesRepository;
 
         public RecipesService(IRecipesRepository<Recipe> recipesRepository, CookbookDbContext context,
-            IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService) 
+            IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
             : base(context, mapper, userContextService, authorizationService)
         {
             _recipesRepository = recipesRepository;
@@ -41,8 +41,8 @@ namespace CookbookAPI.Services
                 .Include(x => x.Area)
                 .Include(x => x.Category)
                 .ProjectTo<RecipeDto>(_mapper.ConfigurationProvider)
-                .Where(x => 
-                    string.IsNullOrEmpty(request.SearchPhrase) 
+                .Where(x =>
+                    string.IsNullOrEmpty(request.SearchPhrase)
                     || x.Instructions.ToLower().Contains(request.SearchPhrase.ToLower())
                     || x.Name.ToLower().Contains(request.SearchPhrase.ToLower())
                     || x.Category.ToLower().Contains(request.SearchPhrase.ToLower()))
@@ -60,7 +60,7 @@ namespace CookbookAPI.Services
 
             var recipeDto = _mapper.Map<RecipeDto>(recipe);
 
-            return new GetRecipeVm{Recipe = recipeDto};
+            return new GetRecipeVm { Recipe = recipeDto };
         }
 
         public async Task<int> Create(RecipeRequest request)
@@ -91,7 +91,7 @@ namespace CookbookAPI.Services
                 throw new ForbidException();
 
             var newRecipeIngredients = request.Ingredients.Select(x =>
-                new RecipeIngredient {IngredientId = x.IngredientId, Measure = x.Measure, RecipeId = id}).ToList();
+                new RecipeIngredient { IngredientId = x.IngredientId, Measure = x.Measure, RecipeId = id }).ToList();
 
             foreach (var recipeIngredient in recipe.RecipeIngredients.ToList())
             {
@@ -112,7 +112,7 @@ namespace CookbookAPI.Services
             recipe.Youtube = recipe.Youtube;
             recipe.Source = recipe.Source;
             recipe.UpdatedAt = DateTime.UtcNow;
-            
+
             await _recipesRepository.Update(recipe);
         }
 
@@ -121,7 +121,7 @@ namespace CookbookAPI.Services
             var recipe = await _recipesRepository.Get(id);
 
             if (recipe is null)
-                throw new  NotFoundException("Recipe not found");
+                throw new NotFoundException("Recipe not found");
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, recipe,
                 new RecipeOperationRequirement(ResourceOperation.Delete));
@@ -146,6 +146,29 @@ namespace CookbookAPI.Services
             {
                 FavoriteRecipes = recipeDtos
             };
+        }
+
+        public async Task AddToFavorites(int id)
+        {
+            var userId = _userContextService.GetUserId;
+            if (userId == null)
+                throw new ForbidException();
+
+            var recipe = await _recipesRepository.Get(id);
+
+            if (recipe == null)
+                throw new NotFoundException($"Recipe with id: {id} not found");
+
+            var favorite = await _recipesRepository
+                .GetFavorite(id, (int)userId);
+
+            if (favorite != null)
+            {
+                throw new BadRequestException(
+                    $"User already have recipe with id: {id} in favorites");
+            }
+
+            await _recipesRepository.AddRecipeToFavorite(id, (int)userId);
         }
     }
 }
