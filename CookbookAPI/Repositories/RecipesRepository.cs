@@ -35,5 +35,15 @@ namespace CookbookAPI.Repositories
 
             return recipe;
         }
+
+        public async Task<List<Recipe>> GetAllFavoritesByUserId(int userId)
+        {
+            return await _context.Recipes
+                .Include(x => x.LikedByUsers)
+                .Where(x => x.LikedByUsers
+                    .Any(y => 
+                        y.UserId == userId))
+                .ToListAsync();
+        }
     }
 }

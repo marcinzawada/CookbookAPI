@@ -12,5 +12,7 @@ namespace CookbookAPI.Repositories.Interfaces
 
         public Task<Recipe> GetWithRecipeIngredients(int id);
 
-    }
+        public Task<List<Recipe>> GetAllFavoritesByUserId(int userId);
+    };
+
 }
