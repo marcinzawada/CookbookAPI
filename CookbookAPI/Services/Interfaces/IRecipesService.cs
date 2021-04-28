@@ -20,5 +20,7 @@ namespace CookbookAPI.Services.Interfaces
         public Task Update(int id, RecipeRequest request);
 
         public Task Delete(int id);
+
+        public Task<GetAllFavoriteRecipesVm> GetAllFavorites();
     }
 }

@@ -131,5 +131,21 @@ namespace CookbookAPI.Services
 
             await _recipesRepository.Delete(id);
         }
+
+        public async Task<GetAllFavoriteRecipesVm> GetAllFavorites()
+        {
+            var userId = _userContextService.GetUserId;
+            if (userId == null)
+                throw new ForbidException();
+
+            var recipes = await _recipesRepository.GetAllFavoritesByUserId((int)userId);
+
+            var recipeDtos = _mapper.Map<List<BaseRecipeDto>>(recipes);
+
+            return new GetAllFavoriteRecipesVm
+            {
+                FavoriteRecipes = recipeDtos
+            };
+        }
     }
 }
