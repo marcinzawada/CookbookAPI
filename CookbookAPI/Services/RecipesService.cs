@@ -170,5 +170,28 @@ namespace CookbookAPI.Services
 
             await _recipesRepository.AddRecipeToFavorite(id, (int)userId);
         }
+
+        public async Task DeleteFromFavorites(int id)
+        {
+            var userId = _userContextService.GetUserId;
+            if (userId == null)
+                throw new ForbidException();
+
+            var recipe = await _recipesRepository.Get(id);
+
+            if (recipe == null)
+                throw new NotFoundException($"Recipe with id: {id} not found");
+
+            var favorite = await _recipesRepository
+                .GetFavorite(id, (int)userId);
+
+            if (favorite == null)
+            {
+                throw new BadRequestException(
+                    $"User doesn't have recipe with id: {id} in favorites");
+            }
+
+            await _recipesRepository.DeleteRecipeFromFavorite(favorite);
+        }
     }
 }
