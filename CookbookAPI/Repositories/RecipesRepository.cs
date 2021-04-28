@@ -61,8 +61,14 @@ namespace CookbookAPI.Repositories
         {
             return await _context.UserFavoriteRecipes
                  .FirstOrDefaultAsync(x =>
-                     x.UserId == recipeId &&
-                     x.RecipeId == userId);
+                     x.UserId == userId &&
+                     x.RecipeId == recipeId);
+        }
+
+        public async Task DeleteRecipeFromFavorite(UserFavoriteRecipe favorite)
+        {
+            _context.UserFavoriteRecipes.Remove(favorite);
+            await _context.SaveChangesAsync();
         }
     }
 }

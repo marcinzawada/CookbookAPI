@@ -17,6 +17,8 @@ namespace CookbookAPI.Repositories.Interfaces
         public Task AddRecipeToFavorite(int recipeId, int userId);
 
         public Task<UserFavoriteRecipe> GetFavorite(int recipeId, int userId);
-    };
 
+        public Task DeleteRecipeFromFavorite(UserFavoriteRecipe favorite);
+
+    };
 }
