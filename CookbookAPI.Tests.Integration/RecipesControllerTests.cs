@@ -252,5 +252,32 @@ namespace CookbookAPI.Tests.Integration
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
+
+        [Fact]
+        public async Task GetAllFavorites_WithValidAuthorizationHeader_ShouldReturnFavoriteRecipes()
+        {
+            //Arrange
+            await AuthenticateAsync();
+
+            //Act
+            var response = await _testClient.GetAsync("/api/recipes/favorites");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            (await response.Content.ReadAsAsync<GetAllFavoriteRecipesVm>())
+                .FavoriteRecipes.Count.Should().BeGreaterOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task GetAllFavorites_WithoutValidAuthorizationHeader_ShouldReturnUnauthoraized()
+        {
+            //Arrange
+
+            //Act
+            var response = await _testClient.GetAsync("/api/recipes/favorites");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }
