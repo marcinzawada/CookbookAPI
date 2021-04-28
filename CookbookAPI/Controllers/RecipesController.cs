@@ -102,12 +102,26 @@ namespace CookbookAPI.Controllers
         [Authorize]
         [Description("Add to favorites")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddToFavorites(int id)
         {
             await _recipesService.AddToFavorites(id);
 
             return Ok();
+        }
+
+        [HttpDelete("favorites/{id}")]
+        [Authorize]
+        [Description("Delete from favorites")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteFromFavorites(int id)
+        {
+            await _recipesService.DeleteFromFavorites(id);
+
+            return NoContent();
         }
     }
 }
