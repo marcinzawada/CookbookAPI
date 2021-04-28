@@ -41,9 +41,28 @@ namespace CookbookAPI.Repositories
             return await _context.Recipes
                 .Include(x => x.LikedByUsers)
                 .Where(x => x.LikedByUsers
-                    .Any(y => 
+                    .Any(y =>
                         y.UserId == userId))
                 .ToListAsync();
+        }
+
+        public async Task AddRecipeToFavorite(int recipeId, int userId)
+        {
+            await _context.UserFavoriteRecipes.AddAsync(new UserFavoriteRecipe
+            {
+                UserId = userId,
+                RecipeId = recipeId
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserFavoriteRecipe> GetFavorite(int recipeId, int userId)
+        {
+            return await _context.UserFavoriteRecipes
+                 .FirstOrDefaultAsync(x =>
+                     x.UserId == recipeId &&
+                     x.RecipeId == userId);
         }
     }
 }
