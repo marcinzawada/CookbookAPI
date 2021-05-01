@@ -66,7 +66,7 @@ namespace CookbookAPI
 
             services.InstallSwagger(Configuration);
 
-            var connectionString = Configuration.GetConnectionString("LocalDb");
+            var connectionString = Configuration.GetConnectionString("CookbookDbConnection");
             services.AddDbContext<CookbookDbContext>(x => x.UseSqlServer(connectionString));
 
             services.AddAutoMapper(this.GetType().Assembly);
