@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/CookbookAPI/ctempinternal-nlog.txt
+/CookbookAPI/.config/dotnet-tools.json
